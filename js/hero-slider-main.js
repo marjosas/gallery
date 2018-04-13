@@ -49,20 +49,20 @@ jQuery(document).ready(function($){
 	}
 
 	function nextSlide(visibleSlide, container, pagination, n){
-		visibleSlide.removeClass('selected').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+		visibleSlide.removeClass('selected from-left from-right').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
 			visibleSlide.removeClass('is-moving');
 		});
 
-		container.children('li').eq(n).addClass('selected');
+		container.children('li').eq(n).addClass('selected from-right').prevAll().addClass('move-left');
 		checkVideo(visibleSlide, container, n);
 	}
 
 	function prevSlide(visibleSlide, container, pagination, n){
-		visibleSlide.removeClass('selected').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
+		visibleSlide.removeClass('selected from-left from-right').addClass('is-moving').one('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', function(){
 			visibleSlide.removeClass('is-moving');
 		});
 
-		container.children('li').eq(n).addClass('selected');
+		container.children('li').eq(n).addClass('selected from-left').removeClass('move-left').nextAll().removeClass('move-left');
 		checkVideo(visibleSlide, container, n);
 	}
 
@@ -92,24 +92,15 @@ jQuery(document).ready(function($){
 	}
 
 	function uploadVideo(container) {
-		var i = 0;
 		container.find('.cd-bg-video-wrapper').each(function(){
 			var videoWrapper = $(this);
 			if( videoWrapper.is(':visible') ) {
 				// if visible - we are not on a mobile device 
 				var	videoUrl = videoWrapper.data('video'),
-					video = $('<video loop><source src="'+videoUrl+'.mp4" type="video/mp4" /></video>');
-				
-				if(i == 0) {
-					video = $('<video autoplay loop><source src="'+videoUrl+'.mp4" type="video/mp4" /></video>');
-				}
-
+					video = $('<video loop><source src="'+videoUrl+'.mp4" type="video/mp4" /><source src="'+videoUrl+'.webm" type="video/webm" /></video>');
 				video.appendTo(videoWrapper);
-
 				// play video if first slide
 				if(videoWrapper.parent('.cd-bg-video.selected').length > 0) video.get(0).play();
-
-				i++;
 			}
 		});
 	}
